@@ -1,0 +1,282 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>cURL-PHP by stil</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>cURL-PHP</h1>
+        <p>Lightweight cURL wrapper for PHP. Supports parallel and non-blocking requests.</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/stil/cURL-PHP" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/stil/cURL-PHP/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/stil/cURL-PHP/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>Table of contents</h1>
+
+<ul>
+<li>
+<a href="#introduction">Introduction</a>
+
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#mainfeatures">Main Features</a></li>
+</ul>
+</li>
+<li><a href="#installation">Installation</a></li>
+<li>
+<a href="#examples">Examples</a>
+
+<ul>
+<li><a href="#singlerequest">Single request</a></li>
+<li><a href="#requestsinparallel">Requests in parallel</a></li>
+</ul>
+</li>
+<li>
+<a href="#curlrequest">cURL\Request</a>
+
+<ul>
+<li><a href="#request__construct">Request::__construct</a></li>
+<li><a href="#requestgetoptions">Request::getOptions</a></li>
+<li><a href="#requestsetoptions">Request::setOptions</a></li>
+<li><a href="#requestgetcontent">Request::getContent</a></li>
+<li><a href="#requestgetinfo">Request::getInfo</a></li>
+<li><a href="#requestsend">Request::send</a></li>
+</ul>
+</li>
+<li>
+<a href="#curlrequestsqueue">cURL\RequesstQueue</a>
+
+<ul>
+<li><a href="#requestsqueue__construct">RequestsQueue::__construct</a></li>
+<li><a href="#requestsqueuegetdefaultoptions">RequestsQueue::getDefaultOptions</a></li>
+<li><a href="#requestsqueuesetdefaultoptions">RequestsQueue::setDefaultOptions</a></li>
+<li><a href="#requestsqueuesocketperform">RequestsQueue::socketPerform</a></li>
+<li><a href="#requestsqueuesocketselect">RequestsQueue::socketSelect</a></li>
+<li><a href="#requestsqueuesend">RequestsQueue::send</a></li>
+</ul>
+</li>
+<li>
+<a href="#curloptions">cURL\Options</a>
+
+<ul>
+<li><a href="#optionsset">Options::set</a></li>
+<li><a href="#optionstoarray">Options::toArray</a></li>
+</ul>
+</li>
+</ul><h2>Introduction</h2>
+
+<h3>Description</h3>
+
+<p>This is small but powerful and robust library which speeds the things up. If you are tired of using PHP cURL extension with its procedural interface, but you want also keep control about script execution - it's great choice for you!</p>
+
+<h3>Main features</h3>
+
+<ul>
+<li>lightweight library with moderate level interface. It's not all-in-one library.</li>
+<li>parallel/asynchronous connections with very simple interface.</li>
+<li>attaching/detaching requests in parallel on run time!</li>
+<li>support for callbacks, so you can control execution process.</li>
+<li>intelligent setters as alternative to CURLOPT_* constants.</li>
+<li>if you know the cURL php extension, you don't have to learn things from beginning</li>
+</ul><h2>Installation</h2>
+
+<p>In order to use cURL-PHP library you need to install the » libcurl package.
+It also requires PHP 5.3 or newer.</p>
+
+<p>You can provide autoloading to your classes if you don't want to include them manually.</p>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+<span class="nb">spl_autoload_register</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$class</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">require</span> <span class="s1">'D:/lib/'</span><span class="o">.</span><span class="nx">strtr</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="s1">'\\'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span> <span class="o">.</span> <span class="s1">'.php'</span><span class="p">;</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Examples</h2>
+
+<h3>Single request</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+<span class="c1">// We will download info about YouTube video: http://youtu.be/_PsdGQ96ah4</span>
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\cURL\Request</span><span class="p">(</span><span class="s1">'http://gdata.youtube.com/feeds/api/videos/_PsdGQ96ah4?v=2&amp;alt=json'</span><span class="p">);</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getOptions</span><span class="p">()</span>
+    <span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="nx">CURLOPT_TIMEOUT</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="nx">CURLOPT_RETURNTRANSFER</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+<span class="nv">$json</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+<span class="nv">$feed</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$json</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+<span class="k">echo</span> <span class="nv">$feed</span><span class="p">[</span><span class="s1">'entry'</span><span class="p">][</span><span class="s1">'title'</span><span class="p">][</span><span class="s1">'$t'</span><span class="p">];</span>
+</pre>
+</div>
+
+
+<p>The above example will output:
+<code>Karmah - Just be good to me</code></p>
+
+<h3>Requests in parallel</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+<span class="c1">// We will download info about 2 YouTube videos:</span>
+<span class="c1">// http://youtu.be/XmSdTa9kaiQ and</span>
+<span class="c1">// http://youtu.be/6dC-sm5SWiU</span>
+
+<span class="c1">// Init queue of requests</span>
+<span class="nv">$queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\cURL\RequestsQueue</span><span class="p">;</span>
+<span class="c1">// Set default options for all requests in queue</span>
+<span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">getDefaultOptions</span><span class="p">()</span>
+    <span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="nx">CURLOPT_TIMEOUT</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="nx">CURLOPT_RETURNTRANSFER</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+<span class="c1">// Set function to be executed when request will be completed</span>
+<span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">onRequestComplete</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$queue</span><span class="p">,</span> <span class="nv">$request</span><span class="p">){</span>
+    <span class="nv">$json</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getContent</span><span class="p">();</span> <span class="c1">// Returns content of response</span>
+    <span class="nv">$feed</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$json</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+    <span class="k">echo</span> <span class="nv">$feed</span><span class="p">[</span><span class="s1">'entry'</span><span class="p">][</span><span class="s1">'title'</span><span class="p">][</span><span class="s1">'$t'</span><span class="p">]</span> <span class="o">.</span> <span class="s1">'&lt;br /&gt;'</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\cURL\Request</span><span class="p">(</span><span class="s1">'http://gdata.youtube.com/feeds/api/videos/XmSdTa9kaiQ?v=2&amp;alt=json'</span><span class="p">);</span>
+<span class="c1">// Add request to queue</span>
+<span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\cURL\Request</span><span class="p">(</span><span class="s1">'http://gdata.youtube.com/feeds/api/videos/6dC-sm5SWiU?v=2&amp;alt=json'</span><span class="p">);</span>
+<span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+
+<span class="c1">// Execute queue</span>
+<span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+</pre>
+</div>
+
+
+<p>The above example will output:</p>
+
+<pre><code>Kool &amp; The Gang - Fresh - 2004
+U2 - With Or Without You
+</code></pre>
+
+<h3>Non-blocking requests</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+<span class="c1">// We will download info about 2 YouTube videos:</span>
+<span class="c1">// http://youtu.be/XmSdTa9kaiQ and</span>
+<span class="c1">// http://youtu.be/6dC-sm5SWiU</span>
+
+<span class="c1">// Init queue of requests</span>
+<span class="nv">$queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\cURL\RequestsQueue</span><span class="p">;</span>
+<span class="c1">// Set default options for all requests in queue</span>
+<span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">getDefaultOptions</span><span class="p">()</span>
+    <span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="nx">CURLOPT_TIMEOUT</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="nx">CURLOPT_RETURNTRANSFER</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+<span class="c1">// Set function to be executed when request will be completed</span>
+<span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">onRequestComplete</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$queue</span><span class="p">,</span> <span class="nv">$request</span><span class="p">){</span>
+    <span class="nv">$json</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getContent</span><span class="p">();</span> <span class="c1">// Returns content of response</span>
+    <span class="nv">$feed</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$json</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+    <span class="k">echo</span> <span class="s1">'&lt;br /&gt;'</span> <span class="o">.</span> <span class="nv">$feed</span><span class="p">[</span><span class="s1">'entry'</span><span class="p">][</span><span class="s1">'title'</span><span class="p">][</span><span class="s1">'$t'</span><span class="p">]</span> <span class="o">.</span> <span class="s1">'&lt;br /&gt;'</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\cURL\Request</span><span class="p">(</span><span class="s1">'http://gdata.youtube.com/feeds/api/videos/XmSdTa9kaiQ?v=2&amp;alt=json'</span><span class="p">);</span>
+<span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\cURL\Request</span><span class="p">(</span><span class="s1">'http://gdata.youtube.com/feeds/api/videos/6dC-sm5SWiU?v=2&amp;alt=json'</span><span class="p">);</span>
+<span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">socketPerform</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s1">'*'</span><span class="p">;</span> <span class="c1">// Do something other when requests are downloaded</span>
+    <span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">socketSelect</span><span class="p">();</span> <span class="c1">// Wait for activity on socket  </span>
+<span class="p">}</span>
+</pre>
+</div>
+
+
+<p>The above example will output something like that:</p>
+
+<pre><code>*********
+Kool &amp; The Gang - Fresh - 2004
+***
+U2 - With Or Without You
+</code></pre>
+
+<h2>cURL\Request</h2>
+
+<h3>Request::__construct</h3>
+
+<h3>Request::getOptions</h3>
+
+<h3>Request::setOptions</h3>
+
+<h3>Request::getContent</h3>
+
+<h3>Request::getInfo</h3>
+
+<h3>Request::send</h3>
+
+<h2>cURL\RequesstQueue</h2>
+
+<h3>RequestsQueue::__construct</h3>
+
+<h3>RequestsQueue::getDefaultOptions</h3>
+
+<h3>RequestsQueue::getDefaultOptions</h3>
+
+<h3>RequestsQueue::setDefaultOptions</h3>
+
+<h3>RequestsQueue::socketPerform</h3>
+
+<h3>RequestsQueue::socketSelect</h3>
+
+<h3>RequestsQueue::send</h3>
+
+<h2>cURL\Options</h2>
+
+<h3>Options::set</h3>
+
+<h3>Options::toArray</h3>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/stil">stil</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-31822517-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
