@@ -24,12 +24,12 @@
       <div id="banner">
         <span id="logo"></span>
 
-        <a href="https://github.com/stil/cURL-PHP" class="button fork"><strong>View On GitHub</strong></a>
+        <a href="https://github.com/stil/curl-easy" class="button fork"><strong>View On GitHub</strong></a>
         <div class="downloads">
           <span>Downloads:</span>
           <ul>
-            <li><a href="https://github.com/stil/cURL-PHP/zipball/master" class="button">ZIP</a></li>
-            <li><a href="https://github.com/stil/cURL-PHP/tarball/master" class="button">TAR</a></li>
+            <li><a href="https://github.com/stil/curl-easy/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/stil/curl-easy/tarball/master" class="button">TAR</a></li>
           </ul>
         </div>
       </div><!-- end banner -->
@@ -113,21 +113,17 @@ It also requires PHP 5.3 or newer.</p>
 
 <p>You can provide autoloading to your classes if you don't want to include them manually.</p>
 
-<div class="highlight">
-<pre><span class="cp">&lt;?php</span>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="nb">spl_autoload_register</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$class</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">require</span> <span class="s1">'D:/lib/'</span><span class="o">.</span><span class="nx">strtr</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="s1">'\\'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span> <span class="o">.</span> <span class="s1">'.php'</span><span class="p">;</span>
 <span class="p">});</span>
-</pre>
-</div>
-
+</pre></div>
 
 <h2>Examples</h2>
 
 <h3>Single request</h3>
 
-<div class="highlight">
-<pre><span class="cp">&lt;?php</span>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="c1">// We will download info about YouTube video: http://youtu.be/_PsdGQ96ah4</span>
 <span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\cURL\Request</span><span class="p">(</span><span class="s1">'http://gdata.youtube.com/feeds/api/videos/_PsdGQ96ah4?v=2&amp;alt=json'</span><span class="p">);</span>
 <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getOptions</span><span class="p">()</span>
@@ -136,17 +132,14 @@ It also requires PHP 5.3 or newer.</p>
 <span class="nv">$json</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
 <span class="nv">$feed</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$json</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
 <span class="k">echo</span> <span class="nv">$feed</span><span class="p">[</span><span class="s1">'entry'</span><span class="p">][</span><span class="s1">'title'</span><span class="p">][</span><span class="s1">'$t'</span><span class="p">];</span>
-</pre>
-</div>
-
+</pre></div>
 
 <p>The above example will output:
 <code>Karmah - Just be good to me</code></p>
 
 <h3>Requests in parallel</h3>
 
-<div class="highlight">
-<pre><span class="cp">&lt;?php</span>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="c1">// We will download info about 2 YouTube videos:</span>
 <span class="c1">// http://youtu.be/XmSdTa9kaiQ and</span>
 <span class="c1">// http://youtu.be/6dC-sm5SWiU</span>
@@ -173,9 +166,7 @@ It also requires PHP 5.3 or newer.</p>
 
 <span class="c1">// Execute queue</span>
 <span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
-</pre>
-</div>
-
+</pre></div>
 
 <p>The above example will output:</p>
 
@@ -185,8 +176,7 @@ U2 - With Or Without You
 
 <h3>Non-blocking requests</h3>
 
-<div class="highlight">
-<pre><span class="cp">&lt;?php</span>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="c1">// We will download info about 2 YouTube videos:</span>
 <span class="c1">// http://youtu.be/XmSdTa9kaiQ and</span>
 <span class="c1">// http://youtu.be/6dC-sm5SWiU</span>
@@ -213,9 +203,7 @@ U2 - With Or Without You
     <span class="k">echo</span> <span class="s1">'*'</span><span class="p">;</span> <span class="c1">// Do something other when requests are downloaded</span>
     <span class="nv">$queue</span><span class="o">-&gt;</span><span class="na">socketSelect</span><span class="p">();</span> <span class="c1">// Wait for activity on socket  </span>
 <span class="p">}</span>
-</pre>
-</div>
-
+</pre></div>
 
 <p>The above example will output something like that:</p>
 
@@ -266,7 +254,7 @@ U2 - With Or Without You
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
       </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
